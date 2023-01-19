@@ -587,14 +587,13 @@ func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 			if cfg.connected[starts] {
 				rf = cfg.rafts[starts]
 			}
-			//DPrintfLog(rf)
+
 			cfg.mu.Unlock()
 			if rf != nil {
 				index1, _, ok := rf.Start(cmd)
 
 				if ok {
 					index = index1
-					//DPrintfWte("[term :%d] :Raft %d ; last log index is %d", rf.currentTerm, rf.me, index)
 					break
 				}
 			}

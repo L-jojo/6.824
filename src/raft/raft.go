@@ -236,6 +236,7 @@ func (rf *Raft) AppendEntries(args *AppendEntryArgs, reply *AppendEntryReply) {
 
 	i := args.PrevLogIndex + 1
 	j := 0
+	isFinished := false
 	for j := 0; j < len(args.Entries); j++ {
 		if i+j >= len(rf.log) { //超了先跳出
 			break
@@ -244,10 +245,11 @@ func (rf *Raft) AppendEntries(args *AppendEntryArgs, reply *AppendEntryReply) {
 			continue
 		} else {
 			rf.log = append(rf.log[:i+j], args.Entries[j:]...)
+			isFinished = true
 			break
 		}
 	}
-	if j < len(args.Entries) {
+	if !isFinished && j < len(args.Entries) {
 		rf.log = append(rf.log, args.Entries[j:]...)
 	}
 	//DPrintfLog(rf)
